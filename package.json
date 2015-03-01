@@ -12,7 +12,7 @@
   },
   "keywords": ["youtube","streams","scraper"],
   "author": "allain <allain.lalonde@gmail.com>",
-  "license": "BSD-3-Clause",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/allain/youtube-extractors/issues"
   },

@@ -6,25 +6,25 @@ var fetchPage = require('../lib/page-fetcher.js');
 var md5 = require('MD5');
 
 function cache(key, builder, cb) {
-  var hashKey = md5(key); 
+  var hashKey = md5(key);
   var filePath = __dirname + '/cache/' + hashKey;
   if (s.existsSync(filePath)) {
     return cb(null, JSON.parse(fs.readFileSync(filePath, 'utf-8')));
   }
 
-  builder(function(err, value) {
+  builder(function (err, value) {
     if (err) return cb(err);
     fs.writeFileSync(filePath, JSON.stringify(value));
     cb(null, value);
   });
 }
 
-cache = function(key, builder, cb) {
-	builder(cb);
+cache = function (key, builder, cb) {
+  builder(cb);
 }
 
 var extractors = require('..')({
-  fetcher: function(videoId, pageToken, cb) {
+  fetcher: function (videoId, pageToken, cb) {
     cache(
       [videoId, pageToken].filter(Boolean).join(''),
       function builder(cb) {
@@ -50,16 +50,16 @@ describe('youtube-extractors', function () {
     extractors.comments('Gaid72fqzNE').pipe(concat(function (comments) {
       assert(comments.length > 1, 'should have some comments');
       assert.equal(50, comments.length, 'until it starts iterating to other pages');
-      comments.forEach(function(c) {
-        assert(typeof(c.id) === 'string');
-        assert(typeof(c.replyTo) === 'number');
-        assert(typeof(c.numReplies) === 'number');
-        assert(typeof(c.user) === 'string');
-        assert(typeof(c.commentText) === 'string');
-        assert(typeof(c.rawDate) === 'string');
-        assert(typeof(c.timestamp) === 'number');
+      comments.forEach(function (c) {
+        assert(typeof (c.id) === 'string');
+        assert(typeof (c.replyTo) === 'number');
+        assert(typeof (c.numReplies) === 'number');
+        assert(typeof (c.user) === 'string');
+        assert(typeof (c.commentText) === 'string');
+        assert(typeof (c.rawDate) === 'string');
+        assert(typeof (c.timestamp) === 'number');
       });
-      
+
       done();
     }));
   });

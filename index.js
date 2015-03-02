@@ -2,7 +2,7 @@ var Readable = require('stream').Readable;
 
 var parsePage = require('./lib/page-parser.js');
 
-module.exports = function(options) {
+module.exports = function (options) {
   return {
     comments: fetchComments
   };

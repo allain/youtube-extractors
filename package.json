@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "cheerio": "^0.18.0",
+    "moment": "^2.9.0",
     "moment-natural": "0.0.2",
     "xmlhttprequest-cookie": "^0.9.2"
   },

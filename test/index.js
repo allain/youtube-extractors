@@ -5,11 +5,10 @@ var concat = require('concat-stream');
 var fetchPage = require('../lib/page-fetcher.js');
 var md5 = require('MD5');
 
-var raptorCache = require('raptor-cache');
 function cache(key, builder, cb) {
   var hashKey = md5(key); 
   var filePath = __dirname + '/cache/' + hashKey;
-  if (fs.existsSync(filePath)) {
+  if (s.existsSync(filePath)) {
     return cb(null, JSON.parse(fs.readFileSync(filePath, 'utf-8')));
   }
 
@@ -18,6 +17,10 @@ function cache(key, builder, cb) {
     fs.writeFileSync(filePath, JSON.stringify(value));
     cb(null, value);
   });
+}
+
+cache = function(key, builder, cb) {
+	builder(cb);
 }
 
 var extractors = require('..')({
@@ -53,7 +56,8 @@ describe('youtube-extractors', function () {
         assert(typeof(c.numReplies) === 'number');
         assert(typeof(c.user) === 'string');
         assert(typeof(c.commentText) === 'string');
-        assert(typeof(c.date) === 'string');
+        assert(typeof(c.rawDate) === 'string');
+        assert(typeof(c.timestamp) === 'number');
       });
       
       done();

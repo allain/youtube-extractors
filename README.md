@@ -18,7 +18,7 @@ $ npm install youtube-extractors
 
 ``` js
 var stdout = require('stdout');
-var extractors = require('youtube-extractors');
+var extractors = require('youtube-extractors')();
 
 // To extract comments
 extractors.comments('videoID').pipe(stdout());

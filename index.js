@@ -1,51 +1,55 @@
 var Readable = require('stream').Readable;
 
-var fetchPage = require('./lib/page-fetcher.js');
 var parsePage = require('./lib/page-parser.js');
 
-module.exports = {
-  comments: fetchComments
-};
+module.exports = function(options) {
+  return {
+    comments: fetchComments
+  };
 
-function fetchComments(videoID) {
-  var readable = new Readable({
-    objectMode: true
-  });
+  // support passing in a fetcher instead of using the built in one (for testing)
+  var fetchPage = options.fetcher || require('./lib/page-fetcher.js');
 
-  var comments;
+  function fetchComments(videoID) {
+    var readable = new Readable({
+      objectMode: true
+    });
 
-  fetchPage(videoID, null, function (err, result) {
-    if (err) {
-      readable.emit('error', err);
-      return;
-    }
+    var comments;
 
-    parsePage(result.html, function (err, result) {
+    (options.fetcher || fetchPage)(videoID, null, function (err, result) {
       if (err) {
         readable.emit('error', err);
         return;
       }
 
-      if (result.comments) {
-        comments = comments || [];
-        result.comments.forEach(function (comment) {
-          comments.push(comment);
-        });
+      parsePage(result.html, function (err, result) {
+        if (err) {
+          readable.emit('error', err);
+          return;
+        }
 
-        readable.push(comments.shift());
-      }
+        if (result.comments) {
+          comments = comments || [];
+          result.comments.forEach(function (comment) {
+            comments.push(comment);
+          });
+
+          readable.push(comments.shift());
+        }
+      });
+
     });
 
-  });
+    readable._read = function () {
+      if (comments === void 0) return;
+      if (comments.length) {
+        this.push(comments.shift());
+      } else {
+        this.push(null);
+      }
+    };
 
-  readable._read = function () {
-    if (comments === void 0) return;
-    if (comments.length) {
-      this.push(comments.shift());
-    } else {
-      this.push(null);
-    }
-  };
-
-  return readable;
-}
+    return readable;
+  }
+};

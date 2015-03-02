@@ -48,10 +48,9 @@ describe('youtube-extractors', function () {
       assert(comments.length > 1, 'should have some comments');
       assert.equal(50, comments.length, 'until it starts iterating to other pages');
       comments.forEach(function(c) {
-        assert(typeof(c.id) === 'number');
+        assert(typeof(c.id) === 'string');
         assert(typeof(c.replyTo) === 'number');
         assert(typeof(c.numReplies) === 'number');
-        assert(typeof(c.youtubeCommentID) === 'string');
         assert(typeof(c.user) === 'string');
         assert(typeof(c.commentText) === 'string');
         assert(typeof(c.date) === 'string');

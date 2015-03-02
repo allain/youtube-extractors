@@ -5,35 +5,7 @@ var concat = require('concat-stream');
 var fetchPage = require('../lib/page-fetcher.js');
 var md5 = require('MD5');
 
-function cache(key, builder, cb) {
-  var hashKey = md5(key);
-  var filePath = __dirname + '/cache/' + hashKey;
-  if (s.existsSync(filePath)) {
-    return cb(null, JSON.parse(fs.readFileSync(filePath, 'utf-8')));
-  }
-
-  builder(function (err, value) {
-    if (err) return cb(err);
-    fs.writeFileSync(filePath, JSON.stringify(value));
-    cb(null, value);
-  });
-}
-
-cache = function (key, builder, cb) {
-  builder(cb);
-}
-
-var extractors = require('..')({
-  fetcher: function (videoId, pageToken, cb) {
-    cache(
-      [videoId, pageToken].filter(Boolean).join(''),
-      function builder(cb) {
-        fetchPage(videoId, pageToken, cb);
-      },
-      cb
-    );
-  }
-});
+var extractors = require('..')({});
 
 describe('youtube-extractors', function () {
   it('should implements comments extractor', function () {

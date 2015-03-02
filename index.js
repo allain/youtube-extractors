@@ -1,14 +1,18 @@
+var assert = require('assert');
+
 var Readable = require('stream').Readable;
 
 var parsePage = require('./lib/page-parser.js');
 
 module.exports = function (options) {
+  var fetchPage = options.fetcher || require('./lib/page-fetcher.js');
+
   return {
     comments: fetchComments
   };
 
   // support passing in a fetcher instead of using the built in one (for testing)
-  var fetchPage = options.fetcher || require('./lib/page-fetcher.js');
+  assert(typeof fetchPage === 'function');
 
   function fetchComments(videoID) {
     var readable = new Readable({
@@ -17,7 +21,7 @@ module.exports = function (options) {
 
     var comments;
 
-    (options.fetcher || fetchPage)(videoID, null, function (err, result) {
+    fetchPage(videoID, null, function (err, result) {
       if (err) {
         readable.emit('error', err);
         return;
